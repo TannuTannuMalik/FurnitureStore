@@ -13,6 +13,60 @@
         android:theme="@style/Theme.FurnitureStore"
         tools:targetApi="31">
         <activity
+            android:name=".settings.ApplySupplierActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.PlatformStatsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.SupplierRequestsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.UserManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".seller.SellerOrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".seller.ManageProductsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".seller.AddProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customer.OrderHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customer.CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customer.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customer.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customer.ProductListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dashboard.AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dashboard.SellerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dashboard.CustomerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
