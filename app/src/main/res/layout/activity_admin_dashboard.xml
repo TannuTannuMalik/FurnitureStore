@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewAdmin"
+        android:text="Welcome Admin!"
+        android:textSize="22sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Admin Dashboard"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:paddingBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/editSellerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Seller Name" />
+
+    <EditText
+        android:id="@+id/editSellerEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Seller Email" />
+
+    <EditText
+        android:id="@+id/editSellerPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/buttonAddSeller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Seller" />
+
 </LinearLayout>

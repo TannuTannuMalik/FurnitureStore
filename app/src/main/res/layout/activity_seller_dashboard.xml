@@ -1,16 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:fillViewport="true"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textViewSeller"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Seller Dashboard"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
-</LinearLayout>
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editTextProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Product Name" />
+
+        <EditText
+            android:id="@+id/editTextCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Category" />
+
+        <EditText
+            android:id="@+id/editTextImageUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Image URL" />
+
+        <EditText
+            android:id="@+id/editTextPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Price"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description" />
+
+        <Button
+            android:id="@+id/buttonAddProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Product"
+            android:layout_marginTop="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSeller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>

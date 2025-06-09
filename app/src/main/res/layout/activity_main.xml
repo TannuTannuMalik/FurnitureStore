@@ -1,56 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="Login"
 
-        <EditText
-            android:id="@+id/editTextProductName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Product Name" />
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/editTextCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Category" />
+    <!-- Label -->
+    <TextView
+        android:id="@+id/labelAvailableProducts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available Products"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/editTextImageUrl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Image URL" />
+    <!-- Product List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/furnitureRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <EditText
-            android:id="@+id/editTextPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Price"
-            android:inputType="numberDecimal" />
-
-        <EditText
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description" />
-
-        <Button
-            android:id="@+id/buttonAddProduct"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Product"
-            android:layout_marginTop="10dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/furnitureRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

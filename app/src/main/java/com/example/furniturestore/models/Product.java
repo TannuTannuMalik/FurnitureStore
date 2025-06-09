@@ -7,18 +7,20 @@ public class Product {
     private String imageUrl;
     private double price;
     private String description;
+    private String sellerId;
 
     public Product() {
         // Required empty constructor for Firebase
     }
 
-    public Product(String id, String name, String category, String imageUrl, double price, String description) {
+    public Product(String id, String name, String category, String imageUrl, double price, String description, String sellerId) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.imageUrl = imageUrl;
         this.price = price;
         this.description = description;
+        this.sellerId = sellerId;
     }
 
     // Getters and Setters
@@ -39,4 +41,7 @@ public class Product {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getSellerId() { return sellerId; }
+    public void setSellerId(String sellerId) { this.sellerId = sellerId; }
 }

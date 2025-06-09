@@ -1,9 +1,11 @@
 package com.example.furniturestore.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.furniturestore.R;
 import com.example.furniturestore.adapters.ProductAdapter;
+import com.example.furniturestore.auth.LoginActivity;
 import com.example.furniturestore.models.Product;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +33,8 @@ public class HomeActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private List<Product> productList;
 
+    private Button loginBtn;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,11 @@ public class HomeActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.furnitureRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        loginBtn = findViewById(R.id.buttonLogin);
+        loginBtn.setOnClickListener(v -> {
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+        });
 
         productList = new ArrayList<>();
         adapter = new ProductAdapter(productList,

@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -71,26 +70,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             textPrice = itemView.findViewById(R.id.productPrice);
             imageProduct = itemView.findViewById(R.id.productImage);
             buttonDelete = itemView.findViewById(R.id.buttonDelete);
-
         }
 
-        public void bind(final Product product, final OnItemClickListener itemClickListener, final OnDeleteClickListener deleteClickListener) {
+        public void bind(final Product product,
+                         final OnItemClickListener itemClickListener,
+                         final OnDeleteClickListener deleteClickListener) {
             textName.setText(product.getName());
             textCategory.setText(product.getCategory());
             textPrice.setText(String.format("$%.2f", product.getPrice()));
 
-            // Load image using Glide (add Glide dependency in your build.gradle)
             Glide.with(imageProduct.getContext())
                     .load(product.getImageUrl())
                     .placeholder(R.drawable.placeholder_image)
                     .into(imageProduct);
 
-
-            // Item click
             itemView.setOnClickListener(v -> itemClickListener.onItemClick(product));
 
-            // Delete button click
-            buttonDelete.setOnClickListener(v -> deleteClickListener.onDeleteClick(product));
+            // Show or hide delete button based on listener
+            if (deleteClickListener != null) {
+                buttonDelete.setVisibility(View.VISIBLE);
+                buttonDelete.setOnClickListener(v -> deleteClickListener.onDeleteClick(product));
+            } else {
+                buttonDelete.setVisibility(View.GONE);
+            }
         }
     }
 }
