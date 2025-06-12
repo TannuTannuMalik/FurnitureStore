@@ -8,8 +8,8 @@ public class Product {
     private double price;
     private String description;
     private String sellerId;
-
-    public Product() {
+    public Product() {}
+    public Product(String id, String name, String category, String imageUrl, double price, String description) {
         // Required empty constructor for Firebase
     }
 

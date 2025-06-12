@@ -33,9 +33,12 @@ public class RegisterActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         Button buttonRegister = findViewById(R.id.buttonRegister);
+        Button buttonGoBack = findViewById(R.id.buttonGoBack); // Added
 
         buttonRegister.setOnClickListener(v -> registerUser());
+        buttonGoBack.setOnClickListener(v -> onBackPressed()); // Go back on click
     }
+
 
     private void registerUser() {
         String name = editTextName.getText().toString().trim();

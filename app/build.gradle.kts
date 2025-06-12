@@ -43,6 +43,13 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation ("com.google.firebase:firebase-auth:22.1.1")
+    implementation(libs.activity)
+    // Room components for Android
+    implementation( "androidx.room:room-runtime:2.5.2")
+    annotationProcessor( "androidx.room:room-compiler:2.5.2")
+
+
+
 
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 

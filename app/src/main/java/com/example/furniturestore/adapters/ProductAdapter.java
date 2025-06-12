@@ -30,11 +30,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private final OnItemClickListener itemClickListener;
     private final OnDeleteClickListener deleteClickListener;
 
-    public ProductAdapter(List<Product> productList, OnItemClickListener itemClickListener, OnDeleteClickListener deleteClickListener) {
+    public ProductAdapter(List<Product> productList,
+                          OnItemClickListener itemClickListener,
+                          OnDeleteClickListener deleteClickListener) {
         this.productList = productList;
         this.itemClickListener = itemClickListener;
         this.deleteClickListener = deleteClickListener;
     }
+    public void updateList(List<Product> newList) {
+        productList.clear();
+        productList.addAll(newList);
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override
@@ -57,42 +65,38 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView textName;
-        private final TextView textCategory;
-        private final TextView textPrice;
-        private final ImageView imageProduct;
+        private final TextView productName;
+        private final TextView productCategory;
+        private final TextView productPrice;
+        private final ImageView productImage;
         private final Button buttonDelete;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            textName = itemView.findViewById(R.id.productName);
-            textCategory = itemView.findViewById(R.id.productCategory);
-            textPrice = itemView.findViewById(R.id.productPrice);
-            imageProduct = itemView.findViewById(R.id.productImage);
+            productName = itemView.findViewById(R.id.productName);
+            productCategory = itemView.findViewById(R.id.productCategory);
+            productPrice = itemView.findViewById(R.id.productPrice);
+            productImage = itemView.findViewById(R.id.productImage);
             buttonDelete = itemView.findViewById(R.id.buttonDelete);
         }
 
-        public void bind(final Product product,
-                         final OnItemClickListener itemClickListener,
-                         final OnDeleteClickListener deleteClickListener) {
-            textName.setText(product.getName());
-            textCategory.setText(product.getCategory());
-            textPrice.setText(String.format("$%.2f", product.getPrice()));
+        public void bind(Product product, OnItemClickListener clickListener, OnDeleteClickListener deleteListener) {
+            productName.setText(product.getName());
+            productCategory.setText(product.getCategory());
+            productPrice.setText(String.format("$%.2f", product.getPrice()));
 
-            Glide.with(imageProduct.getContext())
+            Glide.with(productImage.getContext())
                     .load(product.getImageUrl())
                     .placeholder(R.drawable.placeholder_image)
-                    .into(imageProduct);
+                    .into(productImage);
 
-            itemView.setOnClickListener(v -> itemClickListener.onItemClick(product));
+            itemView.setOnClickListener(v -> {
+                if (clickListener != null) clickListener.onItemClick(product);
+            });
 
-            // Show or hide delete button based on listener
-            if (deleteClickListener != null) {
-                buttonDelete.setVisibility(View.VISIBLE);
-                buttonDelete.setOnClickListener(v -> deleteClickListener.onDeleteClick(product));
-            } else {
-                buttonDelete.setVisibility(View.GONE);
-            }
+            buttonDelete.setOnClickListener(v -> {
+                if (deleteListener != null) deleteListener.onDeleteClick(product);
+            });
         }
     }
 }

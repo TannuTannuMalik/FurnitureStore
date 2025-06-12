@@ -74,8 +74,7 @@ public class SellerDashboardActivity extends AppCompatActivity {
         String id = db.collection("products").document().getId();
         String sellerId = auth.getCurrentUser().getUid();
 
-        Product product = new Product(id, name, category, imageUrl, price, description, sellerId);
-
+        Product product = new Product(id, name, category, imageUrl, price, description);
         product.setSellerId(sellerId);
 
         db.collection("products").document(id)

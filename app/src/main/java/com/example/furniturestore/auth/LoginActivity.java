@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         Button buttonLogin = findViewById(R.id.buttonLogin);
         Button buttonGoToRegister = findViewById(R.id.buttonGoToRegister);
+        Button buttonGoBack = findViewById(R.id.buttonGoBack); // NEW
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -39,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
         buttonGoToRegister.setOnClickListener(v ->
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class))
         );
+
+        // Go Back button action
+        buttonGoBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void loginUser() {
@@ -59,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(authResult -> {
                     String uid = auth.getCurrentUser().getUid();
 
-                    // Hardcoded admin
                     if (email.equals("admin@gmail.com")) {
                         db.collection("users").document(uid).update("role", "admin");
                         startActivity(new Intent(this, AdminDashboardActivity.class));
