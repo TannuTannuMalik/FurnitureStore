@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -52,7 +55,8 @@ public class HomeActivity extends AppCompatActivity {
         productList = new ArrayList<>();
         adapter = new ProductAdapter(productList,
                 product -> showUpdateDialog(product),
-                product -> deleteProduct(product)
+                product -> deleteProduct(product),
+                true  // <-- Added this boolean argument
         );
         recyclerView.setAdapter(adapter);
 
@@ -99,24 +103,39 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showUpdateDialog(Product product) {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_update_product, null);
+
         EditText inputName = dialogView.findViewById(R.id.editTextProductName);
-        EditText inputCategory = dialogView.findViewById(R.id.editTextCategory);
+        Spinner inputCategorySpinner = dialogView.findViewById(R.id.spinnerCategoryUpdate);
         EditText inputImageUrl = dialogView.findViewById(R.id.editTextImageUrl);
         EditText inputPrice = dialogView.findViewById(R.id.editTextPrice);
         EditText inputDescription = dialogView.findViewById(R.id.editTextDescription);
 
         inputName.setText(product.getName());
-        inputCategory.setText(product.getCategory());
         inputImageUrl.setText(product.getImageUrl());
         inputPrice.setText(String.valueOf(product.getPrice()));
         inputDescription.setText(product.getDescription());
+
+        // Define categories for Spinner
+        String[] categories = {"TallBoy", "Couch", "Bedside Drawers", "Dining Table",
+                "Beds", "Hallway Table", "Chairs", "Cupboard"};
+
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, categories);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputCategorySpinner.setAdapter(adapterSpinner);
+
+        // Set spinner selection to current product category
+        int selectedIndex = Arrays.asList(categories).indexOf(product.getCategory());
+        if (selectedIndex >= 0) {
+            inputCategorySpinner.setSelection(selectedIndex);
+        }
 
         new AlertDialog.Builder(this)
                 .setTitle("Update Product")
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
                     product.setName(inputName.getText().toString().trim());
-                    product.setCategory(inputCategory.getText().toString().trim());
+                    product.setCategory(inputCategorySpinner.getSelectedItem().toString().trim());
                     product.setImageUrl(inputImageUrl.getText().toString().trim());
 
                     try {
@@ -142,3 +161,4 @@ public class HomeActivity extends AppCompatActivity {
                 .show();
     }
 }
+

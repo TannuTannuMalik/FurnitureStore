@@ -1,24 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/white"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/splashLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#859864"
     android:padding="24dp">
 
+    <!-- Fullscreen Logo in Top Half -->
     <ImageView
-        android:id="@+id/splashImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/splash_image"
-        android:contentDescription="Splash Image" />
+        android:id="@+id/logoImage"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="150dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/brandlogo"
+        android:contentDescription="App Logo" />
 
+    <!-- Next Button at Bottom Middle, above progress bar -->
     <Button
         android:id="@+id/buttonNext"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/progressBar"
+        android:layout_marginBottom="24dp"
+        android:text="Next"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#b48c57"
+        android:stateListAnimator="@null"
+        android:elevation="6dp" />
+
+    <!-- Progress Circle at Bottom Center -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
-        android:layout_marginTop="32dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:indeterminate="true"
+        android:visibility="visible" />
 
-</LinearLayout>
+</RelativeLayout>

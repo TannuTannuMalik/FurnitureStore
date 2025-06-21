@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Furniture store</string>
+    <string name="app_name">FurnitureStore</string>
+    <string name="product_image">Product image</string>
+    <!-- other strings -->
 </resources>

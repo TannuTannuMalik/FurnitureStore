@@ -1,73 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/white">
 
     <!-- Top App Bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="88dp"
         android:orientation="horizontal"
-        android:padding="12dp"
+        android:paddingTop="40dp"
+        android:paddingHorizontal="12dp"
         android:gravity="center_vertical"
-        android:background="?attr/colorPrimary">
+        android:background="@color/forest_green">
 
-        <!-- Add your home icon in drawable as ic_home -->
         <ImageView
             android:id="@+id/homeIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_home"
-            android:contentDescription="Home Icon"
-           />
+            android:contentDescription="Home"
+            app:tint="@android:color/white"
+            android:padding="4dp" />
+        <ImageView
+            android:id="@+id/iconProfile"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_profile"
+            android:contentDescription="Profile"
+            android:visibility="gone"
+            android:padding="4dp"
+            app:tint="@android:color/white"/>
 
-        <SearchView
-            android:id="@+id/searchView"
+
+
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:queryHint="Search products"
-            android:layout_marginStart="12dp" />
+            android:layout_height="44dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
+            android:background="@android:color/white"
+            android:padding="6dp"
+            android:gravity="center_vertical"
+            android:elevation="2dp">
 
-        <Button
-            android:id="@+id/buttonLogin"
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:queryHint="Search products"
+                android:iconifiedByDefault="false"
+                android:imeOptions="actionSearch" />
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@android:color/black"
+                android:contentDescription="Search Icon"
+                android:padding="6dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:textColor="@android:color/white"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:orientation="vertical"
+            android:gravity="end|center_vertical"
+            android:layout_marginEnd="4dp">
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:textSize="12sp"
+                android:textColor="@android:color/white"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <Button
+                android:id="@+id/buttonRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:textSize="12sp"
+                android:textColor="@android:color/white"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/buttonCart"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="View Cart"
-            android:layout_margin="16dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"/>
-
+            android:layout_height="44dp"
+            android:text="Cart"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#a5812a"
+            android:layout_marginStart="8dp"
+            android:paddingHorizontal="16dp" />
     </LinearLayout>
 
-    <!-- Label -->
-    <TextView
-        android:id="@+id/labelAvailableProducts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Available Products"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_margin="12dp" />
-
-    <!-- Product List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/furnitureRecyclerView"
+    <!-- Main Content + Footer Container -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ReCozy Living Furniture"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/forest_green"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:id="@+id/labelAvailableProducts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Available Products"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/furnitureRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:nestedScrollingEnabled="true"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+
+    <!-- Always-visible Footer -->
+    <TextView
+        android:id="@+id/termsAndConditions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Terms and Conditions"
+        android:textColor="@color/forest_green"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="#f0f0f0" />
 </LinearLayout>

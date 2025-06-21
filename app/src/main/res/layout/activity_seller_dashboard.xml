@@ -1,58 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:padding="16dp">
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
 
+    <!-- Forest Green Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="#014421"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="16dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
 
-        <EditText
-            android:id="@+id/editTextProductName"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/buttonGoBack"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Product Name" />
+            android:src="@android:drawable/ic_menu_revert"
+            android:padding="8dp"
+            android:contentDescription="Back"
+            app:tint="#FFFFFF" />
 
-        <EditText
-            android:id="@+id/editTextCategory"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Category" />
+            android:text="Seller Dashboard"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1" />
 
-        <EditText
-            android:id="@+id/editTextImageUrl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Image URL" />
-
-        <EditText
-            android:id="@+id/editTextPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Price"
-            android:inputType="numberDecimal" />
-
-        <EditText
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description" />
-
+        <!-- Logout button aligned to the right -->
         <Button
-            android:id="@+id/buttonAddProduct"
-            android:layout_width="match_parent"
+            android:id="@+id/buttonLogout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Product"
-            android:layout_marginTop="12dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewSeller"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:text="Logout"
+            android:textColor="#FFFFFF"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp" />
     </LinearLayout>
-</ScrollView>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editTextProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product Name"
+                android:background="@drawable/edit_text_background"
+                android:padding="10dp" />
+
+            <Spinner
+                android:id="@+id/spinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <!-- Upload Image Button -->
+            <Button
+                android:id="@+id/buttonUploadImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Image"
+                android:layout_marginTop="8dp"
+                android:background="@color/forest_green"
+                android:textColor="#FFFFFF" />
+            <Button
+                android:id="@+id/buttonViewOrders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Orders"
+                android:layout_marginBottom="12dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <!-- Image Preview -->
+            <ImageView
+                android:id="@+id/imagePreview"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Image preview" />
+
+            <EditText
+                android:id="@+id/editTextPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Price"
+                android:inputType="numberDecimal"
+                android:background="@drawable/edit_text_background"
+                android:padding="10dp"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/editTextDescription"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:hint="Description"
+                android:background="@drawable/edit_text_background"
+                android:padding="10dp"
+                android:layout_marginTop="8dp"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:lines="5"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:overScrollMode="always" />
+
+            <EditText
+                android:id="@+id/editTextQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="Quantity"
+                android:background="@drawable/edit_text_background"
+                android:padding="10dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- Add Product Button in Forest Green with White Text -->
+            <Button
+                android:id="@+id/buttonAddProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/forest_green"
+                android:text="Add Product"
+                android:textColor="#FFFFFF"
+                tools:ignore="HardcodedText" />
+
+            <!-- RecyclerView with fixed height and margin -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSeller"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

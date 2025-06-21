@@ -18,7 +18,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -34,26 +34,35 @@ android {
 }
 
 dependencies {
+    // AndroidX & UI
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation ("androidx.recyclerview:recyclerview:1.3.0")
-    implementation("com.google.firebase:firebase-auth:22.1.1")
-    implementation("com.google.firebase:firebase-firestore:24.10.3")
-    implementation ("com.squareup.picasso:picasso:2.8")
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    // ✅ Firebase BoM (centralized version control)
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+
+    // Firebase services (no need for versions here!)
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-appcheck")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
+    implementation("com.google.firebase:firebase-appcheck-interop")
+
+    // Image loading
+    implementation("com.squareup.picasso:picasso:2.8")
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation ("com.google.firebase:firebase-auth:22.1.1")
-    implementation(libs.activity)
-    // Room components for Android
-    implementation( "androidx.room:room-runtime:2.5.2")
-    annotationProcessor( "androidx.room:room-compiler:2.5.2")
-
-
-
-
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
+    // Room
+    implementation("androidx.room:room-runtime:2.5.2")
+    annotationProcessor("androidx.room:room-compiler:2.5.2")
+
+    // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
+

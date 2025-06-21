@@ -12,17 +12,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FurnitureStore"
         tools:targetApi="31">
-
-        <!-- Make SplashActivity the launcher -->
+        <activity
+            android:name=".admin.RequestsSupplierActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customer.SupplierRequestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".item_category"
+            android:exported="false" /> <!-- Make SplashActivity the launcher -->
         <activity
             android:name=".SplashActivity"
-            android:exported="true">  <!-- must be true for launcher -->
+            android:exported="true"> <!-- must be true for launcher -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".customer.HomeActivity"
             android:exported="false" />
@@ -31,6 +38,9 @@
             android:exported="false" />
         <activity
             android:name=".settings.ProfileActivity"
+            android:exported="false" /> <!-- Add EditProfileActivity here -->
+        <activity
+            android:name=".settings.EditProfileActivity"
             android:exported="false" />
         <activity
             android:name=".admin.PlatformStatsActivity"
@@ -64,6 +74,9 @@
             android:exported="false" />
         <activity
             android:name=".customer.ProductListActivity"
+            android:exported="false" /> <!-- Added TermsConditionsActivity here -->
+        <activity
+            android:name=".TermsConditionsActivity"
             android:exported="false" />
         <activity
             android:name=".dashboard.AdminDashboardActivity"
@@ -75,17 +88,17 @@
             android:name=".dashboard.CustomerDashboardActivity"
             android:exported="false" />
         <activity
+            android:name=".dashboard.RevenueActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".auth.LoginActivity"
             android:exported="false" />
-
-        <!-- MainActivity remains but no launcher intent -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

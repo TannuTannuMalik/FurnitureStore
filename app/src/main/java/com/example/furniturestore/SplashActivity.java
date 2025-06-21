@@ -3,7 +3,11 @@ package com.example.furniturestore;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,16 +20,18 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        ImageView logo = findViewById(R.id.logoImage);
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        logo.startAnimation(fadeIn);
+
         Button buttonNext = findViewById(R.id.buttonNext);
         buttonNext.setOnClickListener(v -> goToHome());
 
-        // Auto move to Home after delay
-        new Handler().postDelayed(this::goToHome, SPLASH_DELAY);
+        new Handler(Looper.getMainLooper()).postDelayed(this::goToHome, SPLASH_DELAY);
     }
 
     private void goToHome() {
-        Intent intent = new Intent(SplashActivity.this, com.example.furniturestore.MainActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
     }
 }

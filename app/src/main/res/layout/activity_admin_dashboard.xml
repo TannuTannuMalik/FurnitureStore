@@ -1,41 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="16dp"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FAF7F0"
+    android:fillViewport="true">
 
-    <TextView
-        android:text="Welcome Admin!"
-        android:textSize="22sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="20dp"/>
-
-    <EditText
-        android:id="@+id/editSellerName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Seller Name" />
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:fitsSystemWindows="true">
 
-    <EditText
-        android:id="@+id/editSellerEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Seller Email" />
+        <!-- Top bar with Go Back, Title, Logout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="24dp">
 
-    <EditText
-        android:id="@+id/editSellerPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword" />
+            <ImageView
+                android:id="@+id/buttonGoBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_revert"
+                android:padding="8dp"
+                android:contentDescription="Back"
+                app:tint="#8A6240" />
 
-    <Button
-        android:id="@+id/buttonAddSeller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Seller" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Welcome Admin!"
+                android:textSize="22sp"
+                android:textColor="#FFFFFF"
+                android:background="#8A6240"
+                android:gravity="center"
+                android:padding="16dp"
+                android:fontFamily="sans-serif-medium" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="#8A6240"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Input Fields -->
+        <EditText
+            android:id="@+id/editSellerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Seller Name"
+            android:background="@drawable/edit_text_background"
+            android:layout_marginBottom="16dp"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#8A6240" />
+
+        <EditText
+            android:id="@+id/editSellerEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Seller Email"
+            android:background="@drawable/edit_text_background"
+            android:layout_marginBottom="16dp"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#8A6240"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/editSellerPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:background="@drawable/edit_text_background"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#8A6240"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/buttonAddSeller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Seller"
+            android:backgroundTint="#8A6240"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:padding="14dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <Button
+            android:id="@+id/buttonRevenue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Revenue"
+            android:backgroundTint="#4F4636"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false"
+            android:padding="14dp"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium" />
+        <Button
+            android:id="@+id/buttonViewRequests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manage Supplier Requests"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>

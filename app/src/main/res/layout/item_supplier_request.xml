@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/userIdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User ID" />
+
+    <Button
+        android:id="@+id/viewImageBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Uploaded Document" />
+
+    <Button
+        android:id="@+id/approveBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Approve"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/declineBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Decline"
+        android:backgroundTint="#F44336"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

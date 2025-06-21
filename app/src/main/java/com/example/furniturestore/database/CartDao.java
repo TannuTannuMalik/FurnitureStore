@@ -3,6 +3,7 @@ package com.example.furniturestore.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Dao
 public interface CartDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertCartItem(CartItem item);
 
     @Update
@@ -22,9 +23,11 @@ public interface CartDao {
     @Delete
     void deleteCartItem(CartItem item);
 
-    @Query("SELECT * FROM cart_items")
-    List<CartItem> getAllCartItems();
+    // Load cart items only for this user
+    @Query("SELECT * FROM cart WHERE userId = :userId")
+    List<CartItem> getCartItemsForUser(String userId);
 
-    @Query("DELETE FROM cart_items")
-    void clearCart();
+    // Clear cart for specific user
+    @Query("DELETE FROM cart WHERE userId = :userId")
+    void clearCartForUser(String userId);
 }

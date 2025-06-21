@@ -13,6 +13,7 @@ firebaseFirestore = "25.1.4"
 recyclerview = "1.4.0"
 roomCommonJvm = "2.7.1"
 roomRuntimeJvm = "2.7.1"
+firebaseStorage = "21.0.2"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -27,6 +28,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 room-runtime-jvm = { group = "androidx.room", name = "room-runtime-jvm", version.ref = "roomRuntimeJvm" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
