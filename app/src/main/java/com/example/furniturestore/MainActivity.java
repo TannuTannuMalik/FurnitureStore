@@ -4,11 +4,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,11 +18,11 @@ import com.example.furniturestore.adapters.CategoryAdapter;
 import com.example.furniturestore.adapters.ProductAdapter;
 import com.example.furniturestore.auth.LoginActivity;
 import com.example.furniturestore.customer.CartActivity;
-import com.example.furniturestore.dashboard.CustomerDashboardActivity; // Make sure this is your customer dashboard
 import com.example.furniturestore.customer.ProductDetailActivity;
 import com.example.furniturestore.customer.ProductListActivity;
-import com.example.furniturestore.dashboard.AdminDashboardActivity;  // Admin dashboard
-import com.example.furniturestore.dashboard.SellerDashboardActivity;   // Seller dashboard
+import com.example.furniturestore.dashboard.AdminDashboardActivity;
+import com.example.furniturestore.dashboard.CustomerDashboardActivity;
+import com.example.furniturestore.dashboard.SellerDashboardActivity;
 import com.example.furniturestore.models.Category;
 import com.example.furniturestore.models.Product;
 import com.example.furniturestore.settings.ProfileActivity;
@@ -49,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private Button buttonLogin, buttonRegister, buttonCart;
-    private ImageView homeIcon, iconProfile;
-    private SearchView searchView;
+    private ImageView homeIcon, iconProfile, brandLogo;
     private TextView termsAndConditions;
 
     private FirebaseAuth mAuth;
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Ensure this matches your layout XML filename
+        setContentView(R.layout.activity_main); // Ensure layout has brandLogo ImageView
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -68,16 +65,16 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonCart = findViewById(R.id.buttonCart);
-        searchView = findViewById(R.id.searchView);
         homeIcon = findViewById(R.id.homeIcon);
         iconProfile = findViewById(R.id.iconProfile);
         termsAndConditions = findViewById(R.id.termsAndConditions);
+        brandLogo = findViewById(R.id.brandLogo);
 
         // Layout managers
         furnitureRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        // Adapter setup
+        // Product adapter
         productAdapter = new ProductAdapter(productList,
                 product -> {
                     Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
@@ -90,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 },
                 product -> {
-                    // Customers shouldn't delete, but provide a stub to fulfill interface
+                    // Customers shouldn't delete products
                 },
-                false // Not admin/seller
+                false
         );
 
         furnitureRecyclerView.setAdapter(productAdapter);
@@ -113,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             iconProfile.setVisibility(View.GONE);
         }
 
-        // Click actions
+        // Click listeners
         buttonLogin.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, LoginActivity.class))
         );
@@ -130,11 +127,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Already on Home", Toast.LENGTH_SHORT).show()
         );
 
-        // UPDATED profile icon click listener to check role and redirect accordingly
         iconProfile.setOnClickListener(v -> {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user == null) {
-                // Not logged in, send to login screen
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             } else {
                 String uid = user.getUid();
@@ -148,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 switch (role) {
                                     case "admin":
-                                        startActivity(new Intent(MainActivity.this, ProfileActivity.class)); // ✅ Admin → Profile
+                                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                                         break;
                                     case "customer":
                                         startActivity(new Intent(MainActivity.this, CustomerDashboardActivity.class));
@@ -169,24 +164,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchView.setIconifiedByDefault(false);
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-        searchView.setQueryHint("Search products...");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterProducts(query);
-                searchView.clearFocus();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterProducts(newText);
-                return true;
-            }
-        });
+        // Optional: Click on brand logo
+        brandLogo.setOnClickListener(v ->
+                Toast.makeText(this, "Welcome to ReCozy Living!", Toast.LENGTH_SHORT).show()
+        );
 
         termsAndConditions.setOnClickListener(v -> showTermsDialog());
     }
@@ -234,23 +215,5 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Failed to load products", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error loading products", e);
                 });
-    }
-
-    private void filterProducts(String query) {
-        List<Product> filtered = new ArrayList<>();
-        if (query != null && !query.trim().isEmpty()) {
-            String q = query.toLowerCase().trim();
-            for (Product p : allProducts) {
-                if ((p.getName() != null && p.getName().toLowerCase().contains(q)) ||
-                        (p.getCategory() != null && p.getCategory().toLowerCase().contains(q))) {
-                    filtered.add(p);
-                }
-            }
-        } else {
-            filtered.addAll(allProducts);
-        }
-        productList.clear();
-        productList.addAll(filtered);
-        productAdapter.updateList(new ArrayList<>(productList));
     }
 }

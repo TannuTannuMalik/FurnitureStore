@@ -43,13 +43,14 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderAdapter.
         holder.productPrice.setText("Price: $" + item.getPrice());
         holder.productQuantity.setText("Qty: " + item.getQuantity());
 
+        holder.buyerName.setText("Buyer: " + (item.getBuyerName() != null ? item.getBuyerName() : "N/A"));
+        holder.buyerPhone.setText("Phone: " + (item.getBuyerPhone() != null ? item.getBuyerPhone() : "N/A"));
+        holder.buyerCity.setText("City: " + (item.getBuyerCity() != null ? item.getBuyerCity() : "N/A"));
+
         String sellerId = item.getSellerId();
         if (sellerId == null || sellerId.trim().isEmpty()) {
             sellerId = DEFAULT_SELLER_ID;
         }
-
-        // Optional: display sellerId if you want to add TextView for it
-        // holder.sellerIdTextView.setText(sellerId);
 
         Glide.with(context).load(item.getImageUrl()).into(holder.productImage);
     }
@@ -61,6 +62,7 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView productName, productPrice, productQuantity;
+        TextView buyerName, buyerPhone, buyerCity;
         ImageView productImage;
 
         public ViewHolder(@NonNull View itemView) {
@@ -69,6 +71,11 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderAdapter.
             productName = itemView.findViewById(R.id.textProductName);
             productPrice = itemView.findViewById(R.id.textProductPrice);
             productQuantity = itemView.findViewById(R.id.textProductQuantity);
+
+            buyerName = itemView.findViewById(R.id.textBuyerName);
+            buyerPhone = itemView.findViewById(R.id.textBuyerPhone);
+            buyerCity = itemView.findViewById(R.id.textBuyerCity);
+
             productImage = itemView.findViewById(R.id.imageProduct);
         }
     }

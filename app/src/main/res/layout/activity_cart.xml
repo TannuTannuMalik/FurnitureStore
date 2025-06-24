@@ -39,19 +39,6 @@
 
 
 
-        <!-- SEARCH BAR -->
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewCart"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:queryHint="Search products"
-            android:iconifiedByDefault="false"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:background="@android:color/white"
-            android:padding="8dp"
-            android:theme="@style/Widget.AppCompat.SearchView" />
 
         <!-- LOCATION CONTAINER (Clickable) -->
         <LinearLayout
@@ -89,16 +76,7 @@
             android:contentDescription="Profile"
             app:tint="@android:color/white" />
 
-        <!-- WISHLIST ICON -->
-        <ImageView
-            android:id="@+id/iconWishlist"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="8dp"
-            android:padding="6dp"
-            android:src="@drawable/ic_wishlist"
-            android:contentDescription="Wishlist"
-            app:tint="@android:color/white" />
+
     </LinearLayout>
 
     <!-- BREADCRUMB NAVIGATION BAR -->

@@ -4,55 +4,44 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.*;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.furniturestore.MainActivity;
 import com.example.furniturestore.R;
-import com.example.furniturestore.adapters.ProductAdapter;
 import com.example.furniturestore.models.Product;
+import com.example.furniturestore.seller.ManageSellerProductsActivity;
 import com.example.furniturestore.seller.SellerOrdersActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SellerDashboardActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-
-    private RecyclerView recyclerView;
-    private ProductAdapter adapter;
-    private final List<Product> productList = new ArrayList<>();
-    private FirebaseFirestore db;
-    private FirebaseAuth auth;
-    private FirebaseStorage storage;
+    private static final int PICK_MAIN_IMAGE_REQUEST = 101;
+    private static final int PICK_SUB1_IMAGE_REQUEST = 102;
+    private static final int PICK_SUB2_IMAGE_REQUEST = 103;
 
     private EditText nameInput, priceInput, descInput, quantityInput;
     private Spinner categorySpinner;
-    private Button addProductBtn, logoutBtn, uploadImageBtn;
-    private ImageView imagePreview;
+    private Button addProductBtn, logoutBtn, buttonViewOrders, buttonSellerRevenue;
 
-    private Uri imageUri;
-    private String uploadedImageUrl = "";
+    private ImageView imageMain, imageSub1, imageSub2;
+    private Button buttonUploadMain, buttonUploadSub1, buttonUploadSub2;
+
+    private Uri mainImageUri = null;
+    private Uri sub1ImageUri = null;
+    private Uri sub2ImageUri = null;
+
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
+    private FirebaseStorage storage;
 
     private final String[] categories = {
             "Choose Category", "TallBoy", "Couch", "Bedside Drawers",
@@ -75,30 +64,42 @@ public class SellerDashboardActivity extends AppCompatActivity {
         categorySpinner = findViewById(R.id.spinnerCategory);
         addProductBtn = findViewById(R.id.buttonAddProduct);
         logoutBtn = findViewById(R.id.buttonLogout);
-        uploadImageBtn = findViewById(R.id.buttonUploadImage);
-        imagePreview = findViewById(R.id.imagePreview);
-        recyclerView = findViewById(R.id.recyclerViewSeller);
+        buttonViewOrders = findViewById(R.id.buttonViewOrders);
+        buttonSellerRevenue = findViewById(R.id.buttonSellerRevenue);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProductAdapter(productList, this::showUpdateDialog, this::deleteProduct, true);
-        recyclerView.setAdapter(adapter);
+        Button buttonManageProducts = findViewById(R.id.buttonManageProducts);
+        buttonManageProducts.setOnClickListener(v -> {
+            Intent intent = new Intent(SellerDashboardActivity.this, ManageSellerProductsActivity.class);
+            startActivity(intent);
+        });
+
+        Button buttonEditProfile = findViewById(R.id.buttonEditProfile);
+        buttonEditProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(SellerDashboardActivity.this, com.example.furniturestore.settings.EditProfileActivity.class);
+            startActivity(intent);
+        });
+
+        imageMain = findViewById(R.id.imageMain);
+        imageSub1 = findViewById(R.id.imageSub1);
+        imageSub2 = findViewById(R.id.imageSub2);
+
+        buttonUploadMain = findViewById(R.id.buttonUploadMain);
+        buttonUploadSub1 = findViewById(R.id.buttonUploadSub1);
+        buttonUploadSub2 = findViewById(R.id.buttonUploadSub2);
 
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
 
-        uploadImageBtn.setOnClickListener(v -> openImagePicker());
+        buttonUploadMain.setOnClickListener(v -> openImagePicker(PICK_MAIN_IMAGE_REQUEST));
+        buttonUploadSub1.setOnClickListener(v -> openImagePicker(PICK_SUB1_IMAGE_REQUEST));
+        buttonUploadSub2.setOnClickListener(v -> openImagePicker(PICK_SUB2_IMAGE_REQUEST));
 
         addProductBtn.setOnClickListener(v -> addProduct());
-        Button viewOrdersBtn = findViewById(R.id.buttonViewOrders);
 
-        viewOrdersBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(SellerDashboardActivity.this, SellerOrdersActivity.class);
-            startActivity(intent);
-        });
+        buttonViewOrders.setOnClickListener(v -> startActivity(new Intent(this, SellerOrdersActivity.class)));
 
-        ImageView backButton = findViewById(R.id.buttonGoBack);
-        backButton.setOnClickListener(v -> {
+        findViewById(R.id.buttonGoBack).setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });
@@ -109,36 +110,38 @@ public class SellerDashboardActivity extends AppCompatActivity {
             finish();
         });
 
-        loadSellerProducts();
+        // ✅ Corrected: open RevenueActivity
+        buttonSellerRevenue.setOnClickListener(v -> {
+            startActivity(new Intent(SellerDashboardActivity.this, RevenueActivity.class));
+        });
     }
 
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+    private void openImagePicker(int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), requestCode);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            imagePreview.setImageURI(imageUri);
-            uploadImageToFirebase();
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedUri = data.getData();
+            switch (requestCode) {
+                case PICK_MAIN_IMAGE_REQUEST:
+                    mainImageUri = selectedUri;
+                    imageMain.setImageURI(mainImageUri);
+                    break;
+                case PICK_SUB1_IMAGE_REQUEST:
+                    sub1ImageUri = selectedUri;
+                    imageSub1.setImageURI(sub1ImageUri);
+                    break;
+                case PICK_SUB2_IMAGE_REQUEST:
+                    sub2ImageUri = selectedUri;
+                    imageSub2.setImageURI(sub2ImageUri);
+                    break;
+            }
         }
-    }
-
-    private void uploadImageToFirebase() {
-        if (imageUri == null) return;
-
-        StorageReference storageRef = storage.getReference("product_images/" + UUID.randomUUID().toString());
-
-        storageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    uploadedImageUrl = uri.toString();
-                    Toast.makeText(this, "Image uploaded", Toast.LENGTH_SHORT).show();
-                }))
-                .addOnFailureListener(e -> Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show());
     }
 
     private void addProduct() {
@@ -149,12 +152,12 @@ public class SellerDashboardActivity extends AppCompatActivity {
         String category = categorySpinner.getSelectedItem().toString();
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(priceStr) || TextUtils.isEmpty(quantityStr)) {
-            Toast.makeText(this, "Name, Price, and Quantity are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill Name, Price and Quantity", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(uploadedImageUrl)) {
-            Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show();
+        if (mainImageUri == null) {
+            Toast.makeText(this, "Please select a main image", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -169,69 +172,102 @@ public class SellerDashboardActivity extends AppCompatActivity {
             price = Double.parseDouble(priceStr);
             quantity = Integer.parseInt(quantityStr);
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid price or quantity format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid price or quantity", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String id = db.collection("products").document().getId();
-        String sellerId = auth.getCurrentUser().getUid();
-
-        Product product = new Product(id, name, category, uploadedImageUrl, price, description);
-        product.setSellerId(sellerId);
-        product.setQuantity(quantity);
-        product.setCreatedAt(Timestamp.now());
-
-        db.collection("products").document(id)
-                .set(product)
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, "Product added", Toast.LENGTH_SHORT).show();
-                    clearFields();
-                    loadSellerProducts();
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to add product", Toast.LENGTH_SHORT).show());
+        addProductBtn.setEnabled(false);
+        uploadImagesAndSaveProduct(name, category, price, description, quantity);
     }
 
-    private void clearFields() {
+    private void uploadImagesAndSaveProduct(String name, String category, double price,
+                                            String description, int quantity) {
+
+        uploadImage(mainImageUri, urlMain -> {
+            if (urlMain == null) {
+                showToastAndEnableButton("Failed to upload main image");
+                return;
+            }
+            uploadImage(sub1ImageUri, urlSub1 -> {
+                uploadImage(sub2ImageUri, urlSub2 -> {
+                    saveProductToFirestore(name, category, price, description, quantity, urlMain, urlSub1, urlSub2);
+                });
+            });
+        });
+    }
+
+    private void uploadImage(Uri uri, final UploadCallback callback) {
+        if (uri == null) {
+            callback.onUploadComplete(null);
+            return;
+        }
+
+        String filename = "products/" + UUID.randomUUID().toString();
+        StorageReference ref = storage.getReference().child(filename);
+        ref.putFile(uri)
+                .addOnSuccessListener(taskSnapshot ->
+                        ref.getDownloadUrl().addOnSuccessListener(uri1 ->
+                                        callback.onUploadComplete(uri1.toString()))
+                                .addOnFailureListener(e -> callback.onUploadComplete(null)))
+                .addOnFailureListener(e -> callback.onUploadComplete(null));
+    }
+
+    private void saveProductToFirestore(String name, String category, double price, String description,
+                                        int quantity, String mainImageUrl, String sub1ImageUrl, String sub2ImageUrl) {
+
+        String sellerId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : "unknown";
+
+        List<String> imageUrls = new ArrayList<>();
+        imageUrls.add(mainImageUrl);
+        if (sub1ImageUrl != null && !sub1ImageUrl.isEmpty()) imageUrls.add(sub1ImageUrl);
+        if (sub2ImageUrl != null && !sub2ImageUrl.isEmpty()) imageUrls.add(sub2ImageUrl);
+
+        Map<String, Object> productMap = new HashMap<>();
+        productMap.put("name", name);
+        productMap.put("category", category);
+        productMap.put("price", price);
+        productMap.put("description", description);
+        productMap.put("quantity", quantity);
+        productMap.put("sellerId", sellerId);
+        productMap.put("createdAt", Timestamp.now());
+        productMap.put("imageUrl", mainImageUrl);
+        productMap.put("imageUrls", imageUrls);
+
+        db.collection("products")
+                .add(productMap)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Product added!", Toast.LENGTH_SHORT).show();
+                    addProductBtn.setEnabled(true);
+                    clearInputs();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to add product: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    addProductBtn.setEnabled(true);
+                });
+    }
+
+    private void clearInputs() {
         nameInput.setText("");
         priceInput.setText("");
         descInput.setText("");
         quantityInput.setText("");
         categorySpinner.setSelection(0);
-        imagePreview.setImageDrawable(null);
-        uploadedImageUrl = "";
-        imageUri = null;
+
+        mainImageUri = null;
+        sub1ImageUri = null;
+        sub2ImageUri = null;
+
+        imageMain.setImageResource(android.R.color.darker_gray);
+        imageSub1.setImageResource(android.R.color.darker_gray);
+        imageSub2.setImageResource(android.R.color.darker_gray);
     }
 
-    private void loadSellerProducts() {
-        String sellerId = auth.getCurrentUser().getUid();
-        db.collection("products")
-                .whereEqualTo("sellerId", sellerId)
-                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    productList.clear();
-                    for (QueryDocumentSnapshot doc : snapshot) {
-                        Product product = doc.toObject(Product.class);
-                        productList.add(product);
-                    }
-                    adapter.notifyDataSetChanged();
-                });
+    private void showToastAndEnableButton(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        addProductBtn.setEnabled(true);
     }
 
-    private void deleteProduct(Product product) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Product")
-                .setMessage("Are you sure you want to delete this product?")
-                .setPositiveButton("Delete", (dialog, which) ->
-                        db.collection("products").document(product.getId()).delete().addOnSuccessListener(unused -> {
-                            Toast.makeText(this, "Product deleted", Toast.LENGTH_SHORT).show();
-                            loadSellerProducts();
-                        }))
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void showUpdateDialog(Product product) {
-        // You can adapt this method later to support image update with storage if needed
+    private interface UploadCallback {
+        void onUploadComplete(@Nullable String url);
     }
 }

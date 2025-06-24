@@ -118,20 +118,26 @@ public class LoginActivity extends AppCompatActivity {
                                         return;
                                     }
 
+                                    Intent intent = null;
                                     switch (role) {
                                         case "admin":
-                                            startActivity(new Intent(this, AdminDashboardActivity.class));
+                                            intent = new Intent(this, AdminDashboardActivity.class);
                                             break;
                                         case "seller":
-                                            startActivity(new Intent(this, SellerDashboardActivity.class));
+                                            intent = new Intent(this, SellerDashboardActivity.class);
                                             break;
                                         case "customer":
                                         default:
                                             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(this, com.example.furniturestore.MainActivity.class));
+                                            intent = new Intent(this, com.example.furniturestore.MainActivity.class);
                                             break;
-
                                     }
+                                    if (intent != null) {
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+
                                     finish();
                                 } else {
                                     Toast.makeText(this, "User not found in database", Toast.LENGTH_SHORT).show();

@@ -8,62 +8,76 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.furniturestore.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RevenueActivity extends AppCompatActivity {
 
     private TextView revenueReportText;
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_revenue);
 
-        // Back button
+        revenueReportText = findViewById(R.id.revenueReportText);
         ImageView buttonGoBack = findViewById(R.id.buttonGoBack);
         buttonGoBack.setOnClickListener(v -> finish());
 
-        revenueReportText = findViewById(R.id.revenueReportText);
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        loadRevenue();
+        loadSellerRevenue();
     }
 
-    private void loadRevenue() {
-        db.collection("orders").get()
+    private void loadSellerRevenue() {
+        String sellerId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+        if (sellerId == null) {
+            Toast.makeText(this, "Seller not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        db.collection("checkouts")
+                .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    Map<String, Double> sellerRevenueMap = new HashMap<>();
                     double totalRevenue = 0;
 
                     for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                        String sellerId = doc.getString("sellerId");
-                        Double amount = doc.getDouble("totalAmount");
+                        List<Map<String, Object>> products = (List<Map<String, Object>>) doc.get("products");
 
-                        if (sellerId != null && amount != null) {
-                            totalRevenue += amount;
-                            sellerRevenueMap.put(sellerId,
-                                    sellerRevenueMap.getOrDefault(sellerId, 0.0) + amount);
+                        if (products != null) {
+                            for (Map<String, Object> product : products) {
+                                String pid = String.valueOf(product.get("sellerId"));
+                                if (sellerId.equals(pid)) {
+                                    double price = ((Number) product.get("price")).doubleValue();
+                                    int qty = ((Number) product.get("quantity")).intValue();
+                                    totalRevenue += price * qty;
+                                }
+                            }
                         }
                     }
 
-                    double adminProfit = totalRevenue * 0.10;
-
-                    StringBuilder message = new StringBuilder();
-                    message.append("Revenue by each seller:\n\n");
-                    for (Map.Entry<String, Double> entry : sellerRevenueMap.entrySet()) {
-                        message.append("Seller: ").append(entry.getKey())
-                                .append(" → $").append(String.format("%.2f", entry.getValue())).append("\n");
+                    if (totalRevenue == 0) {
+                        revenueReportText.setText("No revenue found. You may not have any completed checkouts yet.");
+                        return;
                     }
 
-                    message.append("\nTotal Revenue: $").append(String.format("%.2f", totalRevenue));
-                    message.append("\nAdmin Profit (10%): $").append(String.format("%.2f", adminProfit));
+                    double adminCut = totalRevenue * 0.10;
+                    double sellerProfit = totalRevenue - adminCut;
 
-                    revenueReportText.setText(message.toString());
+                    String message = "Your Revenue Summary:\n\n"
+                            + "Total Sales: $" + String.format("%.2f", totalRevenue) + "\n"
+                            + "Admin Cut (10%): $" + String.format("%.2f", adminCut) + "\n"
+                            + "Your Profit: $" + String.format("%.2f", sellerProfit);
+
+                    revenueReportText.setText(message);
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Failed to load revenue: " + e.getMessage(), Toast.LENGTH_SHORT).show());

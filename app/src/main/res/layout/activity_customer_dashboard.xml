@@ -35,7 +35,7 @@
             android:id="@+id/textTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Dashboard"
+            android:text="Customer Dashboard"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"

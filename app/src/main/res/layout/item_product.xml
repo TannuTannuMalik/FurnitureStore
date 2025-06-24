@@ -13,12 +13,43 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
+        <!-- Main large image -->
         <ImageView
-            android:id="@+id/productImage"
+            android:id="@+id/productImageMain"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Product image" />
+            android:contentDescription="Main product image" />
+
+        <!-- Two smaller sub-images side by side below the main image -->
+        <LinearLayout
+            android:id="@+id/subImagesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productImageMain"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/productImageSub1"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Sub image 1" />
+
+            <ImageView
+                android:id="@+id/productImageSub2"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Sub image 2" />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/buttonDelete"
@@ -32,11 +63,24 @@
             android:background="?android:attr/selectableItemBackground"
             android:visibility="visible" />
 
+        <!-- Edit button -->
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@id/buttonDelete"
+            android:text="Edit"
+            android:padding="8dp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:background="?android:attr/selectableItemBackground"
+            android:visibility="visible" />
+
         <TextView
             android:id="@+id/productName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/productImage"
+            android:layout_below="@id/subImagesContainer"
             android:text="Product Name"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -62,7 +106,6 @@
             android:textColor="#000000"
             android:paddingTop="4dp" />
 
-        <!-- New creation date TextView -->
         <TextView
             android:id="@+id/productCreatedAt"
             android:layout_width="wrap_content"
@@ -72,6 +115,7 @@
             android:textSize="12sp"
             android:textColor="#666666"
             android:paddingTop="4dp" />
+
         <TextView
             android:id="@+id/productQuantity"
             android:layout_width="wrap_content"

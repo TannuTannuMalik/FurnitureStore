@@ -221,6 +221,7 @@ public class ProductListActivity extends AppCompatActivity {
                         Toast.makeText(this, "Failed to load products.", Toast.LENGTH_SHORT).show();
                         Log.e("Firestore", "Error loading products", task.getException());
                     }
+
                 });
     }
 }

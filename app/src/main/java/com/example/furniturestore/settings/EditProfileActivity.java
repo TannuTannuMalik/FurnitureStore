@@ -1,18 +1,15 @@
 package com.example.furniturestore.settings;
 
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.text.TextUtils;
+import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.furniturestore.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +17,12 @@ import java.util.Map;
 public class EditProfileActivity extends AppCompatActivity {
 
     private EditText editTextName, editTextPhone, editTextAge;
-    private TextView textEmail;
+    private TextView textViewEmail, textViewPassword;
     private Button buttonSave;
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,24 +31,28 @@ public class EditProfileActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        currentUser = auth.getCurrentUser();
 
         editTextName = findViewById(R.id.editTextName);
         editTextPhone = findViewById(R.id.editTextPhone);
         editTextAge = findViewById(R.id.editTextAge);
-        textEmail = findViewById(R.id.textEmail);
+        textViewEmail = findViewById(R.id.textEmail);             // Non-editable email
+        textViewPassword = findViewById(R.id.textPasswordHint);   // Non-editable password field (dummy)
+
         buttonSave = findViewById(R.id.buttonSave);
 
         ImageView backIcon = findViewById(R.id.backIcon);
-        backIcon.setOnClickListener(v -> onBackPressed()); // Go back to the previous screen
+        backIcon.setOnClickListener(v -> onBackPressed());
 
         loadUserData();
 
         buttonSave.setOnClickListener(v -> saveUserData());
     }
 
-
     private void loadUserData() {
-        String uid = auth.getCurrentUser().getUid();
+        if (currentUser == null) return;
+
+        String uid = currentUser.getUid();
 
         db.collection("users").document(uid).get()
                 .addOnSuccessListener(document -> {
@@ -58,7 +60,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         editTextName.setText(document.getString("name"));
                         editTextPhone.setText(document.getString("phone"));
                         editTextAge.setText(document.getString("age"));
-                        textEmail.setText(document.getString("email"));
+                        textViewEmail.setText(document.getString("email"));
+                        textViewPassword.setText("********"); // Display placeholder
                     }
                 })
                 .addOnFailureListener(e ->
@@ -67,12 +70,14 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveUserData() {
-        String uid = auth.getCurrentUser().getUid();
+        if (currentUser == null) return;
+
+        String uid = currentUser.getUid();
         String name = editTextName.getText().toString().trim();
         String phone = editTextPhone.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
 
-        if (name.isEmpty()) {
+        if (TextUtils.isEmpty(name)) {
             editTextName.setError("Name required");
             return;
         }
@@ -82,11 +87,10 @@ public class EditProfileActivity extends AppCompatActivity {
         updates.put("phone", phone);
         updates.put("age", age);
 
-        DocumentReference userRef = db.collection("users").document(uid);
-        userRef.update(updates)
+        db.collection("users").document(uid).update(updates)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show();
-                    finish(); // Go back to profile
+                    finish();
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()

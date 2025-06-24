@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -50,9 +51,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        // Add Seller
         buttonAddSeller.setOnClickListener(v -> addSeller());
 
-        // Go Back to previous screen
+        // Go Back to MainActivity
         buttonGoBack.setOnClickListener(v -> {
             Intent intent = new Intent(AdminDashboardActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -60,8 +62,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             finish();
         });
 
-
-        // Logout with confirmation
+        // Logout Confirmation
         textLogout.setOnClickListener(v -> {
             new AlertDialog.Builder(AdminDashboardActivity.this)
                     .setTitle("Logout")
@@ -75,15 +76,42 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     .setNegativeButton("No", null)
                     .show();
         });
+
+        // View Supplier Requests
         buttonViewRequests.setOnClickListener(v -> {
             Intent intent = new Intent(AdminDashboardActivity.this, RequestsSupplierActivity.class);
             startActivity(intent);
         });
 
-        // Navigate to Revenue page
+        // Show Revenue (Admin 10% of all checkout sales)
         buttonRevenue.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminDashboardActivity.this, RevenueActivity.class);
-            startActivity(intent);
+            db.collection("checkouts").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    double totalSales = 0;
+
+                    for (var document : task.getResult()) {
+                        List<Map<String, Object>> products = (List<Map<String, Object>>) document.get("products");
+                        if (products != null) {
+                            for (Map<String, Object> product : products) {
+                                double price = Double.parseDouble(product.get("price").toString());
+                                int quantity = Integer.parseInt(product.get("quantity").toString());
+                                totalSales += price * quantity;
+                            }
+                        }
+                    }
+
+                    double adminProfit = totalSales * 0.10;
+
+                    new AlertDialog.Builder(AdminDashboardActivity.this)
+                            .setTitle("Admin Revenue")
+                            .setMessage("Total Admin Profit (10%): $" + adminProfit)
+                            .setPositiveButton("OK", null)
+                            .show();
+
+                } else {
+                    Toast.makeText(AdminDashboardActivity.this, "Failed to fetch orders", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 

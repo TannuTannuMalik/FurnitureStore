@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/productDetailLayout"
@@ -8,210 +8,230 @@
     android:fitsSystemWindows="true"
     tools:context=".customer.ProductDetailActivity">
 
-    <!-- Top Bar -->
-    <LinearLayout
-        android:id="@+id/topBar"
+    <!-- Main Scrollable Content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="8dp"
-        android:gravity="center_vertical"
-        android:background="@color/forest_green"
-        android:paddingTop="8dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <ImageView
-            android:id="@+id/backIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_back"
-            app:tint="@android:color/white"
-            android:contentDescription="Back Icon"
-            android:padding="8dp" />
-
-        <ImageView
-            android:id="@+id/homeIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_home"
-            app:tint="@android:color/white"
-            android:layout_marginStart="12dp"
-            android:contentDescription="Home Icon"
-            android:padding="8dp" />
-
-        <TextView
-            android:id="@+id/brandTitle"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="RECOZY"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:gravity="center" />
+            android:orientation="vertical">
 
-        <!-- Cart icon first -->
-        <ImageView
-            android:id="@+id/cartIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_cart"
-            app:tint="@android:color/white"
-            android:contentDescription="Cart Icon"
-            android:padding="8dp" />
+            <!-- Top Bar -->
+            <LinearLayout
+                android:id="@+id/topBar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp"
+                android:gravity="center_vertical"
+                android:background="@color/forest_green"
+                android:paddingTop="8dp">
 
-        <!-- Profile icon second -->
-        <ImageView
-            android:id="@+id/profileIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_profile"
-            app:tint="@android:color/white"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="Profile Icon"
-            android:padding="8dp" />
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/backIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_back"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Back Icon"
+                    android:padding="8dp" />
 
-    <!-- Product Image -->
-    <ImageView
-        android:id="@+id/imageViewProductDetail"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@id/topBar"
-        android:scaleType="centerCrop"
-        android:contentDescription="Product Image" />
+                <ImageView
+                    android:id="@+id/homeIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_home"
+                    app:tint="@android:color/white"
+                    android:layout_marginStart="12dp"
+                    android:contentDescription="Home Icon"
+                    android:padding="8dp" />
 
-    <!-- Product Name -->
-    <TextView
-        android:id="@+id/textViewProductNameDetail"
-        android:layout_below="@id/imageViewProductDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/forest_green"
-        android:layout_marginTop="12dp"
-        android:layout_centerHorizontal="true" />
+                <TextView
+                    android:id="@+id/brandTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RECOZY"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:gravity="center" />
 
-    <!-- Product Category -->
-    <TextView
-        android:id="@+id/textViewProductCategoryDetail"
-        android:layout_below="@id/textViewProductNameDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="4dp"
-        android:layout_centerHorizontal="true" />
+                <ImageView
+                    android:id="@+id/cartIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_cart"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Cart Icon"
+                    android:padding="8dp" />
 
-    <!-- Product Price -->
-    <TextView
-        android:id="@+id/textViewProductPriceDetail"
-        android:layout_below="@id/textViewProductCategoryDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true" />
+                <ImageView
+                    android:id="@+id/profileIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_profile"
+                    app:tint="@android:color/white"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="Profile Icon"
+                    android:padding="8dp" />
+            </LinearLayout>
 
-    <!-- Description -->
-    <TextView
-        android:id="@+id/textViewProductDescriptionDetail"
-        android:layout_below="@id/textViewProductPriceDetail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginHorizontal="16dp"
-        android:textSize="16sp" />
+            <!-- ViewPager with Arrow Navigation -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
 
-    <!-- Quantity Layout -->
-    <LinearLayout
-        android:id="@+id/quantityLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewProductDescriptionDetail"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPagerProductImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
 
-        <TextView
-            android:id="@+id/textViewQuantityLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quantity"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginEnd="12dp" />
+                <ImageButton
+                    android:id="@+id/btnPrevImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_arrow_left"
+                    android:contentDescription="Previous Image" />
 
-        <Button
-            android:id="@+id/buttonDecrease"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:text="-"
-            android:textSize="22sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/forest_green"
-            android:padding="0dp" />
+                <ImageButton
+                    android:id="@+id/btnNextImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next Image" />
+            </FrameLayout>
 
-        <TextView
-            android:id="@+id/textViewQuantityValue"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:text="1"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <!-- Dots Indicator -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                app:tabIndicatorHeight="0dp"
+                app:tabSelectedTextColor="@color/forest_green"
+                app:tabIndicatorColor="@color/forest_green" />
 
-        <Button
-            android:id="@+id/buttonIncrease"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:text="+"
-            android:textSize="22sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/forest_green"
-            android:padding="0dp" />
-    </LinearLayout>
+            <!-- Product Info -->
+            <TextView
+                android:id="@+id/textViewProductNameDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/forest_green" />
 
-    <!-- Add to Cart Button -->
-    <Button
-        android:id="@+id/buttonAddToCart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add to Cart"
-        android:layout_below="@id/quantityLayout"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp"
-        android:backgroundTint="@color/forest_green"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textViewProductCategoryDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
 
-    <!-- Add to Wishlist Button -->
-    <Button
-        android:id="@+id/buttonAddToWishlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add to Wishlist"
-        android:layout_below="@id/buttonAddToCart"
-        android:layout_marginTop="12dp"
-        android:layout_marginHorizontal="16dp"
-        android:backgroundTint="@color/forest_green"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textViewProductPriceDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <!-- Terms -->
-    <TextView
-        android:id="@+id/textViewTerms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Terms and Conditions"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textStyle="bold"
-        android:layout_below="@id/buttonAddToWishlist"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true" />
+            <TextView
+                android:id="@+id/textViewProductDescriptionDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="16dp"
+                android:textSize="16sp" />
 
-</RelativeLayout>
+            <!-- Quantity Layout -->
+            <LinearLayout
+                android:id="@+id/quantityLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textViewQuantityLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quantity"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="12dp" />
+
+                <Button
+                    android:id="@+id/buttonDecrease"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="-"
+                    android:textSize="22sp"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/forest_green"
+                    android:padding="0dp" />
+
+                <TextView
+                    android:id="@+id/textViewQuantityValue"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/buttonIncrease"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="+"
+                    android:textSize="22sp"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/forest_green"
+                    android:padding="0dp" />
+            </LinearLayout>
+
+            <!-- Add to Cart -->
+            <Button
+                android:id="@+id/buttonAddToCart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="16dp"
+                android:backgroundTint="@color/forest_green"
+                android:text="Add to Cart"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <!-- Terms and Conditions -->
+            <TextView
+                android:id="@+id/textViewTerms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                android:text="Terms and Conditions"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

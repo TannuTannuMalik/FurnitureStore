@@ -15,7 +15,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1">
 
         <TextView
@@ -34,5 +34,25 @@
             android:id="@+id/textProductQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <!-- 🆕 Buyer Info -->
+        <TextView
+            android:id="@+id/textBuyerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buyer: "
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/textBuyerPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone: " />
+
+        <TextView
+            android:id="@+id/textBuyerCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="City: " />
     </LinearLayout>
 </LinearLayout>

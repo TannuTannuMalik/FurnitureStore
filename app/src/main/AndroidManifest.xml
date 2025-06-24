@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FurnitureStore"
         tools:targetApi="31">
+
         <activity
             android:name=".admin.RequestsSupplierActivity"
             android:exported="false" />
@@ -20,13 +21,12 @@
             android:exported="false" />
         <activity
             android:name=".item_category"
-            android:exported="false" /> <!-- Make SplashActivity the launcher -->
+            android:exported="false" />
         <activity
             android:name=".SplashActivity"
-            android:exported="true"> <!-- must be true for launcher -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -38,15 +38,12 @@
             android:exported="false" />
         <activity
             android:name=".settings.ProfileActivity"
-            android:exported="false" /> <!-- Add EditProfileActivity here -->
+            android:exported="false" />
         <activity
             android:name=".settings.EditProfileActivity"
             android:exported="false" />
         <activity
             android:name=".admin.PlatformStatsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".admin.SupplierRequestsActivity"
             android:exported="false" />
         <activity
             android:name=".admin.UserManagementActivity"
@@ -55,11 +52,9 @@
             android:name=".seller.SellerOrdersActivity"
             android:exported="false" />
         <activity
-            android:name=".seller.ManageProductsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".seller.AddProductActivity"
-            android:exported="false" />
+            android:name=".seller.EditProductActivity"
+            android:exported="false" /> <!-- ✅ Add this line -->
+
         <activity
             android:name=".customer.OrderHistoryActivity"
             android:exported="false" />
@@ -74,7 +69,7 @@
             android:exported="false" />
         <activity
             android:name=".customer.ProductListActivity"
-            android:exported="false" /> <!-- Added TermsConditionsActivity here -->
+            android:exported="false" />
         <activity
             android:name=".TermsConditionsActivity"
             android:exported="false" />
@@ -83,6 +78,9 @@
             android:exported="false" />
         <activity
             android:name=".dashboard.SellerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".seller.ManageSellerProductsActivity"
             android:exported="false" />
         <activity
             android:name=".dashboard.CustomerDashboardActivity"
@@ -99,6 +97,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>

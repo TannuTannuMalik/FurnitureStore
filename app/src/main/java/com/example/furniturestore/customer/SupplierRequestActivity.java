@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.furniturestore.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,9 +26,12 @@ public class SupplierRequestActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri selectedImageUri;
-    private ImageView previewImage;
-    private Button selectImageBtn, submitRequestBtn;
+
+    private ImageView previewImage, backIcon;
+    private Button selectImageBtn, submitRequestBtn, cancelBtn;
     private TextView statusText;
+    private CheckBox termsCheckbox;
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private StorageReference storageRef;
@@ -41,22 +41,41 @@ public class SupplierRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_request);
 
+        // Initialize views
+        previewImage = findViewById(R.id.previewImage);
         selectImageBtn = findViewById(R.id.selectImageBtn);
         submitRequestBtn = findViewById(R.id.submitRequestBtn);
-        previewImage = findViewById(R.id.previewImage);
+        cancelBtn = findViewById(R.id.cancelBtn);
+        backIcon = findViewById(R.id.backIcon);
         statusText = findViewById(R.id.statusText);
+        termsCheckbox = findViewById(R.id.termsCheckbox);
 
-        db = FirebaseFirestore.getInstance();
+        // Firebase
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("supplier_docs");
 
+        // Open image picker
         selectImageBtn.setOnClickListener(v -> openImagePicker());
 
+        // Back icon listener
+        backIcon.setOnClickListener(v -> onBackPressed());
+
+        // Cancel button listener
+        cancelBtn.setOnClickListener(v -> finish());
+
+        // Submit request
         submitRequestBtn.setOnClickListener(v -> {
             if (selectedImageUri == null) {
                 Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (!termsCheckbox.isChecked()) {
+                Toast.makeText(this, "Please agree to the terms", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             uploadImageAndSubmitRequest();
         });
     }
@@ -92,8 +111,11 @@ public class SupplierRequestActivity extends AppCompatActivity {
     }
 
     private void submitRequestToFirestore(String userId, String fileUrl) {
+        String email = mAuth.getCurrentUser().getEmail(); // ✅ Add email
+
         Map<String, Object> request = new HashMap<>();
         request.put("userId", userId);
+        request.put("email", email); // ✅ Save email to Firestore
         request.put("status", "pending");
         request.put("documentUrl", fileUrl);
         request.put("timestamp", new Date());

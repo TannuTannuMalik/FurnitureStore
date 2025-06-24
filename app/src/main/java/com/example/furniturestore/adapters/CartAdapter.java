@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.furniturestore.R;
 import com.example.furniturestore.models.CartItem;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 
 import java.util.List;
 
@@ -50,12 +52,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.textName.setText(item.getProductName());
         holder.textPrice.setText(String.format("$%.2f", item.getPrice()));
         holder.textQuantity.setText(String.valueOf(item.getQuantity()));
-
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
-            Picasso.get().load(item.getImageUrl()).into(holder.imageView);
+            Glide.with(context)
+                    .load(item.getImageUrl())
+                    .apply(new RequestOptions()
+                            .placeholder(android.R.drawable.ic_menu_report_image)
+                            .error(android.R.drawable.ic_delete))
+                    .into(holder.imageView);
         } else {
             holder.imageView.setImageResource(android.R.drawable.ic_menu_report_image);
         }
+
+
 
         holder.btnIncrease.setOnClickListener(v -> {
             listener.onIncreaseQuantity(item);

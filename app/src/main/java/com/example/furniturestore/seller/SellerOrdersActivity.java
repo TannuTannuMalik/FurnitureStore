@@ -58,6 +58,11 @@ public class SellerOrdersActivity extends AppCompatActivity {
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         List<Map<String, Object>> products = (List<Map<String, Object>>) doc.get("products");
 
+                        // Get buyer info from the order document itself
+                        String buyerName = doc.getString("name");
+                        String buyerPhone = doc.getString("phone");
+                        String buyerCity = doc.getString("city");
+
                         if (products != null) {
                             for (Map<String, Object> map : products) {
                                 String itemSellerId = (String) map.get("sellerId");
@@ -69,7 +74,10 @@ public class SellerOrdersActivity extends AppCompatActivity {
                                             ((Long) map.get("quantity")).intValue(),
                                             ((Number) map.get("price")).doubleValue(),
                                             (String) map.get("imageUrl"),
-                                            itemSellerId
+                                            itemSellerId,
+                                            buyerName,
+                                            buyerPhone,
+                                            buyerCity
                                     ));
                                 }
                             }

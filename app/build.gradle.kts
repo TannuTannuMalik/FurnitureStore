@@ -36,14 +36,13 @@ android {
 dependencies {
     // AndroidX & UI
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 
-    // ✅ Firebase BoM (centralized version control)
+    // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
-
-    // Firebase services (no need for versions here!)
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
@@ -51,10 +50,13 @@ dependencies {
     implementation("com.google.firebase:firebase-appcheck-playintegrity")
     implementation("com.google.firebase:firebase-appcheck-interop")
 
-    // Image loading
-    implementation("com.squareup.picasso:picasso:2.8")
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+    // Image loading (Glide)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.recyclerview)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // If using Picasso instead of Glide (optional)
+    // implementation("com.squareup.picasso:picasso:2.8")
 
     // Room
     implementation("androidx.room:room-runtime:2.5.2")
@@ -65,4 +67,3 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
-

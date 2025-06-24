@@ -1,9 +1,8 @@
 package com.example.furniturestore.admin;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,10 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.furniturestore.R;
+import com.example.furniturestore.adapters.SupplierRequestAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.example.furniturestore.adapters.SupplierRequestAdapter;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,20 +32,31 @@ public class RequestsSupplierActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.supplierRequestsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         adapter = new SupplierRequestAdapter(this, requestList);
         recyclerView.setAdapter(adapter);
 
-        loadSupplierRequests();
+        // Filter buttons
+        Button btnPending = findViewById(R.id.btnPending);
+        Button btnApproved = findViewById(R.id.btnApproved);
+        Button btnDeclined = findViewById(R.id.btnDeclined);
+
+        btnPending.setOnClickListener(v -> loadSupplierRequests("pending"));
+        btnApproved.setOnClickListener(v -> loadSupplierRequests("approved"));
+        btnDeclined.setOnClickListener(v -> loadSupplierRequests("declined"));
+
+        loadSupplierRequests("pending"); // default load
     }
 
-    private void loadSupplierRequests() {
-        db.collection("supplier_requests").get()
+    private void loadSupplierRequests(String status) {
+        db.collection("supplier_requests")
+                .whereEqualTo("status", status)
+                .get()
                 .addOnSuccessListener(querySnapshot -> {
                     requestList.clear();
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         Map<String, Object> data = doc.getData();
-                        data.put("docId", doc.getId()); // For update/delete actions
+                        data.put("userId", doc.getId()); // already present
+                        data.put("email", doc.getString("email")); // ✅ email added
                         requestList.add(data);
                     }
                     adapter.notifyDataSetChanged();
@@ -57,4 +66,5 @@ public class RequestsSupplierActivity extends AppCompatActivity {
                     Log.e("SupplierRequests", "Error loading", e);
                 });
     }
+
 }

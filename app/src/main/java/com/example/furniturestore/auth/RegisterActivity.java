@@ -41,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         Button buttonGoBack = findViewById(R.id.buttonGoBack);
 
         buttonRegister.setOnClickListener(v -> registerUser());
-        buttonGoBack.setOnClickListener(v -> onBackPressed()); // Go back on click
+        buttonGoBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void registerUser() {
@@ -92,8 +92,11 @@ public class RegisterActivity extends AppCompatActivity {
                             .set(userMap)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, CustomerDashboardActivity.class));
-                                finish();
+
+                                // ✅ Clear back stack and go to dashboard
+                                Intent intent = new Intent(this, CustomerDashboardActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             })
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, "Failed to save user: " + e.getMessage(), Toast.LENGTH_SHORT).show()

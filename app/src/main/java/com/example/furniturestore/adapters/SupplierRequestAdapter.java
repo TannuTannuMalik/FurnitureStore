@@ -3,9 +3,7 @@ package com.example.furniturestore.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -38,11 +36,10 @@ public class SupplierRequestAdapter extends RecyclerView.Adapter<SupplierRequest
     @Override
     public void onBindViewHolder(@NonNull SupplierRequestAdapter.ViewHolder holder, int position) {
         Map<String, Object> request = requestList.get(position);
-
         String userId = (String) request.get("userId");
         String imageUrl = (String) request.get("documentUrl");
 
-        holder.userIdText.setText("User ID: " + userId);
+        holder.userIdText.setText("User ID: " + userId.substring(0, Math.min(userId.length(), 8)) + "...");
 
         holder.viewImageBtn.setOnClickListener(v -> {
             if (imageUrl != null) {
@@ -57,12 +54,14 @@ public class SupplierRequestAdapter extends RecyclerView.Adapter<SupplierRequest
                         .collection("users")
                         .document(userId)
                         .update("role", "seller")
-                        .addOnSuccessListener(aVoid -> {
-                            FirebaseFirestore.getInstance()
-                                    .collection("supplier_requests")
-                                    .document(userId)
-                                    .update("status", "approved");
-                        });
+                        .addOnSuccessListener(aVoid -> FirebaseFirestore.getInstance()
+                                .collection("supplier_requests")
+                                .document(userId)
+                                .update("status", "approved")
+                                .addOnSuccessListener(unused -> {
+                                    requestList.remove(holder.getAdapterPosition());
+                                    notifyItemRemoved(holder.getAdapterPosition());
+                                }));
             }
         });
 
@@ -71,7 +70,11 @@ public class SupplierRequestAdapter extends RecyclerView.Adapter<SupplierRequest
                 FirebaseFirestore.getInstance()
                         .collection("supplier_requests")
                         .document(userId)
-                        .update("status", "declined");
+                        .update("status", "declined")
+                        .addOnSuccessListener(unused -> {
+                            requestList.remove(holder.getAdapterPosition());
+                            notifyItemRemoved(holder.getAdapterPosition());
+                        });
             }
         });
     }

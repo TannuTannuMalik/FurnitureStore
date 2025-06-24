@@ -3,6 +3,7 @@ package com.example.furniturestore.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -51,9 +52,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         loadCartItems();
 
-        buttonBack.setOnClickListener(v -> {
-            finish();  // just finish this activity
-        });
+        buttonBack.setOnClickListener(v -> finish());
 
         buttonLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
@@ -75,10 +74,11 @@ public class CheckoutActivity extends AppCompatActivity {
             List<CartItem> cartItemList = db.cartDao().getCartItemsForUser(userId);
             cartItems.clear();
             for (CartItem c : cartItemList) {
-                // Keep existing sellerId if valid, else fallback
+                Log.d("CheckoutDebug", "CartItem SellerID: " + c.getSellerId());
+
                 String sellerId = c.getSellerId();
                 if (sellerId == null || sellerId.trim().isEmpty()) {
-                    sellerId = DEFAULT_SELLER_ID; // fallback sellerId
+                    sellerId = DEFAULT_SELLER_ID;
                 }
                 cartItems.add(new OrderItem(
                         c.getProductId(),
@@ -120,7 +120,6 @@ public class CheckoutActivity extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         long orderTimestamp = System.currentTimeMillis();
 
-        // Prepare product list keeping existing sellerId or fallback if missing
         List<Map<String, Object>> productList = new ArrayList<>();
         for (OrderItem item : cartItems) {
             Map<String, Object> productMap = new HashMap<>();
