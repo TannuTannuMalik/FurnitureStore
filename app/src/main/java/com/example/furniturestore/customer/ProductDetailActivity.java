@@ -11,7 +11,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.furniturestore.MainActivity;
 import com.example.furniturestore.R;
-import com.example.furniturestore.TermsConditionsActivity;
 import com.example.furniturestore.adapters.ImageSliderAdapter;
 import com.example.furniturestore.database.AppDatabase;
 import com.example.furniturestore.models.CartItem;
@@ -21,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
@@ -36,9 +34,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     private int maxQuantity = 5;
     private final int minQuantity = 1;
 
-    private String productId, name, category, description, imageUrl, sellerId;
+    private String productId, name, category, description, sellerId;
     private double price;
     private int productQuantity;
+    private ArrayList<String> imageUrls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         profileIcon = findViewById(R.id.profileIcon);
         btnPrevImage = findViewById(R.id.btnPrevImage);
         btnNextImage = findViewById(R.id.btnNextImage);
-
         nameText = findViewById(R.id.textViewProductNameDetail);
         categoryText = findViewById(R.id.textViewProductCategoryDetail);
         priceText = findViewById(R.id.textViewProductPriceDetail);
@@ -65,7 +63,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         buttonDecrease = findViewById(R.id.buttonDecrease);
         quantityValue = findViewById(R.id.textViewQuantityValue);
 
-        // Adjust for status bar
+        // Handle status bar padding if needed
         final View topBar = findViewById(R.id.topBar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             topBar.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -76,27 +74,21 @@ public class ProductDetailActivity extends AppCompatActivity {
             topBar.requestApplyInsets();
         }
 
-        // Get product data from intent
+        // Get product data from Intent
         Intent intent = getIntent();
         productId = intent.getStringExtra("productId");
         name = intent.getStringExtra("productName");
         category = intent.getStringExtra("productCategory");
         price = intent.getDoubleExtra("productPrice", 0.0);
         description = intent.getStringExtra("productDescription");
-        imageUrl = intent.getStringExtra("productImageUrl");
-        String imageSubUrl1 = intent.getStringExtra("productSubImage1");
-        String imageSubUrl2 = intent.getStringExtra("productSubImage2");
         productQuantity = intent.getIntExtra("productQuantity", 0);
         sellerId = intent.getStringExtra("productSellerId");
+        imageUrls = intent.getStringArrayListExtra("productImageUrls");
+        if (imageUrls == null) imageUrls = new ArrayList<>();
 
         maxQuantity = productQuantity;
 
-        // Prepare image list for ViewPager2
-        List<String> imageUrls = new ArrayList<>();
-        if (imageUrl != null && !imageUrl.isEmpty()) imageUrls.add(imageUrl);
-        if (imageSubUrl1 != null && !imageSubUrl1.isEmpty()) imageUrls.add(imageSubUrl1);
-        if (imageSubUrl2 != null && !imageSubUrl2.isEmpty()) imageUrls.add(imageSubUrl2);
-
+        // Setup image slider
         ImageSliderAdapter adapter = new ImageSliderAdapter(this, imageUrls);
         viewPagerProductImages.setAdapter(adapter);
         new TabLayoutMediator(tabLayoutIndicator, viewPagerProductImages, (tab, position) -> {}).attach();
@@ -111,19 +103,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         btnPrevImage.setOnClickListener(v -> {
             int currentItem = viewPagerProductImages.getCurrentItem();
-            if (currentItem > 0) {
-                viewPagerProductImages.setCurrentItem(currentItem - 1, true);
-            }
+            if (currentItem > 0) viewPagerProductImages.setCurrentItem(currentItem - 1, true);
         });
 
         btnNextImage.setOnClickListener(v -> {
             int currentItem = viewPagerProductImages.getCurrentItem();
-            if (currentItem < adapter.getItemCount() - 1) {
-                viewPagerProductImages.setCurrentItem(currentItem + 1, true);
-            }
+            if (currentItem < adapter.getItemCount() - 1) viewPagerProductImages.setCurrentItem(currentItem + 1, true);
         });
 
-        // Set product details
+        // Set UI data
         nameText.setText(name);
         categoryText.setText(category);
         priceText.setText(String.format("$%.2f", price));
@@ -135,7 +123,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             addToCartBtn.setText("Out of Stock");
         }
 
-        // Quantity logic
+        // Quantity controls
         buttonIncrease.setOnClickListener(v -> {
             if (quantity < maxQuantity) {
                 quantity++;
@@ -152,7 +140,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
-        // Add to cart logic
+        // Add to Cart logic
         addToCartBtn.setOnClickListener(v -> {
             FirebaseAuth auth = FirebaseAuth.getInstance();
             String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : "guest_user";
@@ -164,28 +152,19 @@ public class ProductDetailActivity extends AppCompatActivity {
                         .get()
                         .addOnSuccessListener(documentSnapshot -> {
                             String role = documentSnapshot.getString("role");
-                            String finalSellerId;
-
-                            if ("seller".equals(role)) {
-                                finalSellerId = userId;
-                            } else if (sellerId != null && !sellerId.trim().isEmpty()) {
-                                finalSellerId = sellerId;
-                            } else {
-                                finalSellerId = "D7KYKRmEHmfSS0VP9yRp8241OoB3";
-                            }
-
+                            String finalSellerId = (sellerId != null && !sellerId.isEmpty()) ? sellerId : "DEFAULT_SELLER_ID";
                             insertCartItem(userId, finalSellerId);
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(this, "Failed to get role. Using default seller.", Toast.LENGTH_SHORT).show();
-                            insertCartItem(userId, "D7KYKRmEHmfSS0VP9yRp8241OoB3");
+                            insertCartItem(userId, "DEFAULT_SELLER_ID");
                         });
             } else {
-                insertCartItem(userId, "D7KYKRmEHmfSS0VP9yRp8241OoB3");
+                insertCartItem(userId, "DEFAULT_SELLER_ID");
             }
         });
 
-        // Navigation icons
+        // Navigation
         backIcon.setOnClickListener(v -> finish());
 
         homeIcon.setOnClickListener(v -> {
@@ -233,15 +212,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void insertCartItem(String userId, String resolvedSellerId) {
-        CartItem cartItem = new CartItem(
-                userId,
-                productId,
-                name,
-                quantity,
-                price,
-                imageUrl,
-                resolvedSellerId
-        );
+        String firstImage = (imageUrls != null && !imageUrls.isEmpty()) ? imageUrls.get(0) : "";
+        CartItem cartItem = new CartItem(userId, productId, name, quantity, price, firstImage, resolvedSellerId);
 
         new Thread(() -> {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());

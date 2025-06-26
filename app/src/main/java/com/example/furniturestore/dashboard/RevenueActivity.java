@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.furniturestore.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,6 +21,8 @@ public class RevenueActivity extends AppCompatActivity {
     private TextView revenueReportText;
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+
+    private static final String DEFAULT_SELLER_ID = "D7KYKRmEHmfSS0VP9yRp8241OoB3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +36,18 @@ public class RevenueActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        loadSellerRevenue();
+        loadDefaultSellerRevenue();
     }
 
-    private void loadSellerRevenue() {
-        String sellerId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+    private void loadDefaultSellerRevenue() {
+        FirebaseUser user = auth.getCurrentUser();
 
-        if (sellerId == null) {
-            Toast.makeText(this, "Seller not logged in", Toast.LENGTH_SHORT).show();
+        if (user == null) {
+            Toast.makeText(this, "No seller logged in", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        String displayId = user.getEmail() != null ? user.getEmail() : user.getUid();
 
         db.collection("checkouts")
                 .get()
@@ -54,8 +59,8 @@ public class RevenueActivity extends AppCompatActivity {
 
                         if (products != null) {
                             for (Map<String, Object> product : products) {
-                                String pid = String.valueOf(product.get("sellerId"));
-                                if (sellerId.equals(pid)) {
+                                String sellerId = String.valueOf(product.get("sellerId"));
+                                if (DEFAULT_SELLER_ID.equals(sellerId)) {
                                     double price = ((Number) product.get("price")).doubleValue();
                                     int qty = ((Number) product.get("quantity")).intValue();
                                     totalRevenue += price * qty;
@@ -65,21 +70,22 @@ public class RevenueActivity extends AppCompatActivity {
                     }
 
                     if (totalRevenue == 0) {
-                        revenueReportText.setText("No revenue found. You may not have any completed checkouts yet.");
+                        revenueReportText.setText("No revenue found for default seller.");
                         return;
                     }
 
                     double adminCut = totalRevenue * 0.10;
                     double sellerProfit = totalRevenue - adminCut;
 
-                    String message = "Your Revenue Summary:\n\n"
-                            + "Total Sales: $" + String.format("%.2f", totalRevenue) + "\n"
+                    String message = "Revenue for Logged-in Seller (" + displayId + "):\n\n"
+                            + "Total Sales (default seller): $" + String.format("%.2f", totalRevenue) + "\n"
                             + "Admin Cut (10%): $" + String.format("%.2f", adminCut) + "\n"
-                            + "Your Profit: $" + String.format("%.2f", sellerProfit);
+                            + "Seller Profit: $" + String.format("%.2f", sellerProfit);
 
                     revenueReportText.setText(message);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to load revenue: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(this, "Failed to load revenue: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }

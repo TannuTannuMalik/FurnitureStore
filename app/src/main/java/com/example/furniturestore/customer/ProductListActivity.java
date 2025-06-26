@@ -73,9 +73,9 @@ public class ProductListActivity extends AppCompatActivity {
                     intent.putExtra("productCategory", product.getCategory());
                     intent.putExtra("productPrice", product.getPrice());
                     intent.putExtra("productDescription", product.getDescription());
-                    intent.putExtra("productImageUrl", product.getImageUrl());
-                    intent.putExtra("productQuantity", product.getQuantity()); // ✅ This was missing
-
+                    intent.putExtra("productQuantity", product.getQuantity());
+                    intent.putExtra("productSellerId", product.getSellerId());
+                    intent.putStringArrayListExtra("productImageUrls", new ArrayList<>(product.getImageUrls()));
                     startActivity(intent);
                 },
                 product -> {
@@ -84,7 +84,7 @@ public class ProductListActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     updateTotalProductsCount();
                 },
-                false // <-- Added boolean argument for isAdminOrSeller
+                false
         );
 
         recyclerView.setAdapter(adapter);
@@ -141,11 +141,9 @@ public class ProductListActivity extends AppCompatActivity {
                             }
                         })
                         .addOnFailureListener(e ->
-                                Toast.makeText(ProductListActivity.this, "Failed to fetch user role: " + e.getMessage(), Toast.LENGTH_SHORT).show())
-                ;
+                                Toast.makeText(ProductListActivity.this, "Failed to fetch user role: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
-
 
         iconCart.setOnClickListener(v -> {
             Intent intent = new Intent(ProductListActivity.this, CartActivity.class);
@@ -168,7 +166,6 @@ public class ProductListActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // no action
             }
         });
     }
@@ -182,7 +179,6 @@ public class ProductListActivity extends AppCompatActivity {
                 Collections.sort(productList, (p1, p2) -> Double.compare(p2.getPrice(), p1.getPrice()));
                 break;
             case SORT_NEW_ARRIVALS:
-                // Assuming Product has getCreatedAt() returning Comparable<Date> or Long timestamp
                 Collections.sort(productList, (p1, p2) -> {
                     if (p1.getCreatedAt() == null || p2.getCreatedAt() == null) return 0;
                     return p2.getCreatedAt().compareTo(p1.getCreatedAt());
